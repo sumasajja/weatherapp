@@ -1,0 +1,44 @@
+<section class="content">
+<div class="container">
+<div class="row">
+<div class="col-sm-6">
+<h4> 	Weather apps -click on each app to learn more!</h4>
+</div>
+<div class="col-sm-4">
+<div class="col-sm-5 search-div-label">
+Search by App Name: 
+</div>
+<div class="col-sm-4 search-div" >
+<em class="glyphicon glyphicon-search" id="searchIcon"> </em>
+<input type="text" ng-model="search.title">
+</div>
+</div>
+</div>
+</div>
+<div class="container">
+    <table class="table">
+
+        <tr>
+            <th>Weather Apps</th>
+            <th>Rating</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="app in model.weatherData | filter:search | orderBy: 'name'">
+            <td><p><a ng-click="model.goTo(app.title)" >{{app.title}}</a></p>
+			<img src="{{app.imgsrc}}" height="100" width="180" alt="img"></img>
+			</td>
+            <td>
+                <weatherapp-rating value="app.rating" max="5" set-rating="model.setRating(app, value)"></weatherapp-rating>
+            </td>
+            <td>
+			
+            </td>
+        </tr>
+    </table>
+
+   <!-- <accordion>
+        <accordion-panel heading="Panel 1"> Panel 1 </accordion-panel>
+        <accordion-panel heading="Panel 2"> Panel 2 </accordion-panel>
+    </accordion> -->
+</div>
+</section>

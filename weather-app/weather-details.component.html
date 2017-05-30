@@ -1,0 +1,18 @@
+<h2> {{ model.title | decodeURIComponent }}</h2>
+<nav class="navbar navbar-inverse bg-inverse" class="container-fluid">
+    <div class="container-fluid">
+        
+        <ul class="nav navbar-nav navbar-left">
+		     <li>
+                <a class="nav-item nav-link active" ng-link="['Overview']"> Overview </a>
+            </li>
+            <li>
+                <a class="nav-item nav-link" ng-link="['Downloads']"> Downloads </a>
+            </li>
+             <li>
+                <a class="nav-item nav-link" ng-link="['MarketValue']"> Market Value </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<ng-outlet></ng-outlet>
