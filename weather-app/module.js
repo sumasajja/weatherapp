@@ -3,11 +3,13 @@
 
     var module = angular.module("theWeatherApp", ["ngComponentRouter"]);
 	function controller($http){
+	  var model=this;
+
+        
 	var API_KEY = "f894a7a03243b49a44109f13b3c23a86";
     var API_UNIT_TYPE = "imperial"; // otherwise change to 'imperial'.
     var API_URL = "http://api.openweathermap.org/data/2.5/weather?APPID=" + API_KEY + "&units=" + API_UNIT_TYPE;
     var type,temp,tempC=null;
-	var model=this;
     var MESSAGE_LOCATION_NOT_FOUND = "Location not found. Please search for something else.";
     var MESSAGE_API_REQUEST_ERROR = "There was a problem getting weather data. Please try again.";
 	
@@ -19,9 +21,14 @@
     function init ()
     {
         _waitingForData = false;
-
+       if (navigator.geolocation) {
+        
         // Get the geolocation position of the current user (if they allow this).
         navigator.geolocation.getCurrentPosition(geolocationSuccessHandler, geolocationErrorHandler);
+       } else {
+       alert("Your device does not support geolocation");
+       }
+   
     }
 	
 	    function geolocationSuccessHandler (position)
@@ -33,7 +40,8 @@
         // Load weather data using the lat and lon values, now that we have the user's position.
         getWeatherDataFromCoords(lat, lon);
     }
-
+ 
+ 
 	
 	    function getWeatherDataFromCoords (lat, lon)
     {
@@ -58,9 +66,22 @@
     }
     function geolocationErrorHandler (error)
     {
-        // The user has disallowed sharing their geolocation, or there was a general error obtaining the info.
-        // Even still, they will still be able to search for weather information.
-        console.log("geolocationErrorHandler");
+           switch (error.code) {
+          case error.TIMEOUT:
+            alert('Timeout. Try again. Loading from default co-ordinates');
+            return getWeatherDataFromCoords (34.075375, -84.294090);
+          case error.POSITION_UNAVAILABLE:
+            alert('Your position is not available at the moment. Loading from default co-ordinates');
+            return getWeatherDataFromCoords (34.075375, -84.294090);
+          case error.PERMISSION_DENIED:
+            alert('No geolocation. Loading from default co-ordinates');
+           return getWeatherDataFromCoords (34.075375, -84.294090);
+          case error.UNKNOWN_ERROR:
+            alert('Unknown error. Fyi. Loading from default co-ordinates');
+           return getWeatherDataFromCoords (34.075375, -84.294090);
+          }
+        
+       
     }
 	
 	 function apiRequestSuccess (data, xhr)
@@ -88,6 +109,7 @@
         type = data.weather[0].main; //Types tracked: Clouds, Clear, Mist, Haze, Rain 
   		temp = data.main.temp.toFixed(0);
   		tempC = ((temp - 32) * (5 / 9)).toFixed(0);
+
     	$('#current-temp').html(tempC + "&deg;C" +" / "+ temp + "&deg;F");
     	pick(type);
      
